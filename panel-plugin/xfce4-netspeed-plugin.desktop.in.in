@@ -1,0 +1,7 @@
+[Xfce Panel]
+Type=X-XFCE-PanelPlugin
+Encoding=UTF-8
+_Name=Network Speed Monitor
+_Comment=Shows the network download/upload speed
+Icon=xfce4-netspeed-plugin
+X-XFCE-Exec=@PLUGIN_PATH@/xfce4-netspeed-plugin

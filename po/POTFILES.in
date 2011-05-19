@@ -1,0 +1,6 @@
+panel-plugin/xfce4_netspeed_plugin.c
+panel-plugin/options.c
+panel-plugin/device_info.c
+panel-plugin/utils.c
+panel-plugin/configure.c
+panel-plugin/xfce4-netspeed-plugin.desktop.in.in
