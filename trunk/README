@@ -1,0 +1,23 @@
+*********************************************
+***********  xfce4-netspeed-plugin  **********
+*********************************************
+
+xfce4-netspeed-plugin shows the instant download / upload speed in the Xfce Panel.
+
+** Requirements **
+
+* libxfce4util 4.3.90
+* libxfcegui4 4.3.90
+* libxfce4panel 4.3.90			      
+* libgtop 2.0
+
+** Building **
+
+./configure
+make
+make install (as root)
+
+** Usage **
+
+After properly installing it, you should find this plugin in the "Add New Items..." Xfce Panel dialog,
+under the name "Network Speed Plugin". You can then tweak the plugin using the configuration dialog.
