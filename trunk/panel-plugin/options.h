@@ -34,6 +34,7 @@ typedef struct {
     gboolean show_icon;
     gboolean show_bits; /* instead of bytes */
     gboolean show_sum; /* instead of separate rx, tx */
+    gint fixed_width;
 
 } NetSpeedOptions;
 

@@ -152,7 +152,7 @@ void net_speed_update_icon(NetSpeedPlugin *net_speed_plugin) {
         }
 
         net_speed_plugin->icon = gtk_image_new_from_pixbuf(buf);
-        gdk_pixbuf_unref(buf);
+        g_object_unref(buf);
 
         gtk_box_pack_start(GTK_BOX(net_speed_plugin->box), net_speed_plugin->icon, FALSE, FALSE, 0);
         gtk_widget_show(net_speed_plugin->icon);
@@ -173,7 +173,15 @@ void net_speed_update_options(NetSpeedPlugin *net_speed_plugin) {
     /* show/hide frame */
     gtk_frame_set_shadow_type(GTK_FRAME(net_speed_plugin->frame), 
         net_speed_plugin->options->show_frame ? GTK_SHADOW_IN : GTK_SHADOW_NONE);
-    
+
+    /* fixed width */    
+    if (net_speed_plugin->options->fixed_width) {
+        gtk_widget_set_size_request(net_speed_plugin->frame, net_speed_plugin->options->fixed_width, net_speed_plugin->options->fixed_width);
+    }
+    else {
+        gtk_widget_set_size_request(net_speed_plugin->frame, -1, -1);
+    }
+
     /* show/hide icon */
     net_speed_update_icon(net_speed_plugin);
     
@@ -305,7 +313,7 @@ static void net_speed_create_widgets(NetSpeedPlugin *net_speed_plugin) {
     GdkPixbuf *tx_arrow_buf = gtk_icon_theme_load_icon(icon_theme, "gtk-go-up", 16, 0, NULL);
     if (tx_arrow_buf) {
         net_speed_plugin->tx_icon = gtk_image_new_from_pixbuf(tx_arrow_buf);
-        gdk_pixbuf_unref(tx_arrow_buf);
+        g_object_unref(tx_arrow_buf);
         
         gtk_box_pack_end(GTK_BOX(net_speed_plugin->box), net_speed_plugin->tx_icon, FALSE, FALSE, 0);
         gtk_widget_show(net_speed_plugin->tx_icon);
@@ -320,7 +328,7 @@ static void net_speed_create_widgets(NetSpeedPlugin *net_speed_plugin) {
     GdkPixbuf *rx_arrow_buf = gtk_icon_theme_load_icon(icon_theme, "gtk-go-down", 16, 0, NULL);
     if (rx_arrow_buf) {
         net_speed_plugin->rx_icon = gtk_image_new_from_pixbuf(rx_arrow_buf);
-        gdk_pixbuf_unref(rx_arrow_buf);
+        g_object_unref(rx_arrow_buf);
 
         gtk_box_pack_end(GTK_BOX(net_speed_plugin->box), net_speed_plugin->rx_icon, FALSE, FALSE, 0);
         gtk_widget_show(net_speed_plugin->rx_icon);
