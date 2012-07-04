@@ -55,6 +55,7 @@ gboolean net_speed_options_load(NetSpeedOptions *options, XfcePanelPlugin *plugi
     options->show_sum = xfce_rc_read_bool_entry(rc, "show_sum",  FALSE);
     options->device = (gchar *) xfce_rc_read_entry(rc, "device",  NULL);
     options->device = g_strdup(options->device);
+    options->fixed_width = xfce_rc_read_int_entry(rc, "fixed_width",  0);
     
     xfce_rc_close(rc);
     
@@ -74,6 +75,7 @@ gboolean net_speed_options_save(NetSpeedOptions *options, XfcePanelPlugin *plugi
     xfce_rc_write_bool_entry(rc, "show_bits", options->show_bits);
     xfce_rc_write_bool_entry(rc, "show_sum", options->show_sum);
     xfce_rc_write_entry(rc, "device", options->device ? options->device : "");
+    xfce_rc_write_int_entry(rc, "fixed_width", options->fixed_width);
 
     xfce_rc_close(rc);
     

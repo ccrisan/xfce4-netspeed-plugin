@@ -32,6 +32,8 @@ typedef struct {
     GtkWidget *show_icon_check_button;
     GtkWidget *show_bits_check_button;
     GtkWidget *show_sum_check_button;
+    GtkWidget *fixed_width_check_button;
+    GtkWidget *fixed_width_spin_button;
     
     NetSpeedPlugin *net_speed_plugin;
 
