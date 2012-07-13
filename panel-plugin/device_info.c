@@ -50,6 +50,7 @@ void device_info_fill(DeviceInfo *device_info) {
     device_info->rx = netload.bytes_in;
 
     device_info->up = (netload.if_flags & (1L << GLIBTOP_IF_FLAGS_UP) ? TRUE : FALSE);
+    device_info->running = (netload.if_flags & (1L << GLIBTOP_IF_FLAGS_RUNNING) ? TRUE : FALSE);
     
     if (netload.if_flags & (1L << GLIBTOP_IF_FLAGS_LOOPBACK)) {
         device_info->type = DEVICE_TYPE_LOOPBACK;

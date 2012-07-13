@@ -185,27 +185,6 @@ void net_speed_update_options(NetSpeedPlugin *net_speed_plugin) {
     /* show/hide icon */
     net_speed_update_icon(net_speed_plugin);
     
-    if (net_speed_plugin->device_info) {
-        if (net_speed_plugin->options->show_sum) {
-            gtk_widget_hide(GTK_WIDGET(net_speed_plugin->rx_icon));
-            
-            gtk_widget_hide(GTK_WIDGET(net_speed_plugin->tx_icon));
-            gtk_widget_hide(GTK_WIDGET(net_speed_plugin->tx_label));
-        }
-        else {
-            gtk_widget_show(GTK_WIDGET(net_speed_plugin->rx_icon));
-
-            gtk_widget_show(GTK_WIDGET(net_speed_plugin->tx_icon));
-            gtk_widget_show(GTK_WIDGET(net_speed_plugin->tx_label));
-        }
-    }
-    else {
-        gtk_widget_hide(GTK_WIDGET(net_speed_plugin->rx_icon));
-        
-        gtk_widget_hide(GTK_WIDGET(net_speed_plugin->tx_icon));
-        gtk_widget_hide(GTK_WIDGET(net_speed_plugin->tx_label));
-    }
-    
     /* clear the history */
     net_speed_plugin->history_index = -1;
     net_speed_plugin->rx_speed = 0;
@@ -214,13 +193,45 @@ void net_speed_update_options(NetSpeedPlugin *net_speed_plugin) {
     /* restart the timer */
     net_speed_restart_timeout(net_speed_plugin);
     
-    gtk_widget_set_size_request(GTK_WIDGET(net_speed_plugin->plugin), -1, -1); // TODO add a configurable size option
+    gtk_widget_set_size_request(GTK_WIDGET(net_speed_plugin->plugin), -1, -1);
 
     /* update the plugin as well */
     net_speed_update_plugin(net_speed_plugin);
 }
 
 gboolean net_speed_update_plugin(NetSpeedPlugin *net_speed_plugin) {
+    /* if the is automatically chosen,
+     * we need to iterate through the device list
+     * with each plugin update, and find the most "active" one */
+    if (net_speed_plugin->options->device == NULL) {
+        if (net_speed_plugin->device_info) {
+            device_info_free(net_speed_plugin->device_info);
+            net_speed_plugin->device_info = NULL;
+        }
+
+        GList *device, *devices = device_info_list_get();
+        DeviceInfo *device_info, *running_device_info = NULL;
+        for (device = devices; device != NULL; device = g_list_next(device)) {
+            device_info = device_info_new(device->data);
+            device_info_fill(device_info);
+
+            if (device_info->running && device_info->type != DEVICE_TYPE_LOOPBACK) {
+                running_device_info = device_info;
+                break;
+            }
+            else {
+                device_info_free(device_info);
+            }
+        }
+        device_info_list_free(devices);
+        
+        if (net_speed_plugin->device_info) {
+            device_info_free(net_speed_plugin->device_info);
+        }
+        
+        net_speed_plugin->device_info = running_device_info;
+    }
+
     if (net_speed_plugin->device_info) { /* a device has been chosen */
         gint i;
         
@@ -236,7 +247,9 @@ gboolean net_speed_update_plugin(NetSpeedPlugin *net_speed_plugin) {
         }
         
         gboolean old_up = net_speed_plugin->device_info->up;
-        device_info_fill(net_speed_plugin->device_info);
+        if (net_speed_plugin->options->device != NULL) { /* if device was guessed, the device_info is already filled */
+            device_info_fill(net_speed_plugin->device_info);
+        }
 
         net_speed_plugin->history_rx[net_speed_plugin->history_index] = net_speed_plugin->device_info->rx;
         net_speed_plugin->history_tx[net_speed_plugin->history_index] = net_speed_plugin->device_info->tx;
@@ -249,9 +262,7 @@ gboolean net_speed_update_plugin(NetSpeedPlugin *net_speed_plugin) {
             net_speed_plugin->tx_speed = (delta_tx) * 1000 / (net_speed_plugin->options->refresh_interval * net_speed_plugin->history_index);
         }
         
-        if (net_speed_plugin->device_info->up != old_up) { /* the interface went up or down */
-            net_speed_update_icon(net_speed_plugin);
-        }
+        net_speed_update_icon(net_speed_plugin);
     }
 
     net_speed_update_labels(net_speed_plugin);

@@ -54,8 +54,15 @@ static void net_speed_configure_changed(GtkWidget *widget, NetSpeedConfigure *ne
     if (net_speed_plugin->options->device) {
         g_free(net_speed_plugin->options->device);
     }
-    net_speed_plugin->options->device =
-        gtk_combo_box_get_active_text(GTK_COMBO_BOX(net_speed_configure->device_combo));
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(net_speed_configure->auto_device_check_button))) {
+        gtk_widget_set_sensitive(net_speed_configure->device_combo, FALSE);
+        net_speed_plugin->options->device = NULL;
+    }
+    else {
+        gtk_widget_set_sensitive(net_speed_configure->device_combo, TRUE);
+        net_speed_plugin->options->device =
+            gtk_combo_box_get_active_text(GTK_COMBO_BOX(net_speed_configure->device_combo));
+    }
     
     /* show frame */
     net_speed_plugin->options->show_frame =
@@ -112,7 +119,17 @@ void net_speed_configure_show(XfcePanelPlugin *plugin, NetSpeedPlugin *net_speed
 
     dialog_vbox = GTK_DIALOG(dialog)->vbox;
 
-    /* device */    
+    /* auto-device */    
+    hbox = gtk_hbox_new(FALSE, 3);
+    gtk_container_add(GTK_CONTAINER(dialog_vbox), hbox);
+    gtk_container_set_border_width(GTK_CONTAINER(hbox), 3);
+    
+    net_speed_configure->auto_device_check_button = button = gtk_check_button_new_with_mnemonic(_("Automatically Choose Network Device"));
+    gtk_box_pack_start(GTK_BOX(hbox), button, FALSE, FALSE, 0);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), net_speed_plugin->options->device == NULL);
+    g_signal_connect(G_OBJECT(button), "toggled", G_CALLBACK(net_speed_configure_changed), net_speed_configure);
+    
+    /* device */
     hbox = gtk_hbox_new(FALSE, 3);
     gtk_container_add(GTK_CONTAINER(dialog_vbox), hbox);
     gtk_container_set_border_width(GTK_CONTAINER(hbox), 3);
@@ -135,6 +152,8 @@ void net_speed_configure_show(XfcePanelPlugin *plugin, NetSpeedPlugin *net_speed
     gtk_combo_box_set_active(GTK_COMBO_BOX(combo), sel_index);
     g_signal_connect(G_OBJECT(combo), "changed", G_CALLBACK(net_speed_configure_changed), net_speed_configure);
     device_info_list_free(devices);
+    
+    gtk_widget_set_sensitive(net_speed_configure->device_combo, net_speed_plugin->options->device != NULL);
 
     /* show frame */
     hbox = gtk_hbox_new(FALSE, 3);

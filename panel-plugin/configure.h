@@ -26,6 +26,7 @@ typedef struct {
 
     GtkWidget *dialog;
     
+    GtkWidget *auto_device_check_button;
     GtkWidget *device_combo;
     GtkWidget *refresh_interval_spinner;
     GtkWidget *show_frame_check_button;
