@@ -38,6 +38,7 @@ typedef struct {
     guint64 rx;
     guint64 tx;
     gboolean up;
+    gboolean running;
 
 } DeviceInfo;
 
