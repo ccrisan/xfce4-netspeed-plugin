@@ -7,7 +7,7 @@ xfce4-netspeed-plugin shows the instant download / upload speed in the Xfce Pane
 ** Requirements **
 
 * libxfce4util 4.3.90
-* libxfcegui4 4.3.90
+* libxfce4ui 4.3.90
 * libxfce4panel 4.3.90			      
 * libgtop 2.0
 
