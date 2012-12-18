@@ -5,14 +5,14 @@ xfce4_netspeed_plugin_CFLAGS =					\
 	-I$(top_srcdir)						\
 	@LIBXFCE4PANEL_CFLAGS@					\
 	@LIBXFCE4UTIL_CFLAGS@					\
-	@LIBXFCEGUI4_CFLAGS@					\
+	@LIBXFCE4UI_CFLAGS@					\
 	@LIBGTOP_CFLAGS@					\
 	-DPACKAGE_LOCALE_DIR=\"$(localedir)\"
 
 xfce4_netspeed_plugin_LDADD =					\
 	@LIBXFCE4PANEL_LIBS@					\
 	@LIBXFCE4UTIL_LIBS@					\
-	@LIBXFCEGUI4_LIBS@					\
+	@LIBXFCE4UI_LIBS@					\
 	@LIBGTOP_LIBS@
 
 xfce4_netspeed_plugin_SOURCES =					\
