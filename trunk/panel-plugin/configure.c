@@ -56,10 +56,12 @@ static void net_speed_configure_changed(GtkWidget *widget, NetSpeedConfigure *ne
     }
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(net_speed_configure->auto_device_check_button))) {
         gtk_widget_set_sensitive(net_speed_configure->device_combo, FALSE);
+        net_speed_plugin->options->device_auto = TRUE;
         net_speed_plugin->options->device = NULL;
     }
     else {
         gtk_widget_set_sensitive(net_speed_configure->device_combo, TRUE);
+        net_speed_plugin->options->device_auto = FALSE;
         net_speed_plugin->options->device =
             gtk_combo_box_get_active_text(GTK_COMBO_BOX(net_speed_configure->device_combo));
     }
@@ -126,7 +128,7 @@ void net_speed_configure_show(XfcePanelPlugin *plugin, NetSpeedPlugin *net_speed
     
     net_speed_configure->auto_device_check_button = button = gtk_check_button_new_with_mnemonic(_("Automatically Choose Network Device"));
     gtk_box_pack_start(GTK_BOX(hbox), button, FALSE, FALSE, 0);
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), net_speed_plugin->options->device == NULL);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button), net_speed_plugin->options->device_auto == TRUE);
     g_signal_connect(G_OBJECT(button), "toggled", G_CALLBACK(net_speed_configure_changed), net_speed_configure);
     
     /* device */

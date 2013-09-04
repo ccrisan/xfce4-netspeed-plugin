@@ -203,7 +203,7 @@ gboolean net_speed_update_plugin(NetSpeedPlugin *net_speed_plugin) {
     /* if the is automatically chosen,
      * we need to iterate through the device list
      * with each plugin update, and find the most "active" one */
-    if (net_speed_plugin->options->device == NULL) {
+    if (net_speed_plugin->options->device_auto == TRUE) {
         if (net_speed_plugin->device_info) {
             device_info_free(net_speed_plugin->device_info);
             net_speed_plugin->device_info = NULL;

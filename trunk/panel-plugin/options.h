@@ -30,6 +30,7 @@ typedef struct {
 
     guint refresh_interval;
     gchar *device;
+    gboolean device_auto;   /* 'Automatically Choose Network Device' */
     gboolean show_frame;
     gboolean show_icon;
     gboolean show_bits; /* instead of bytes */
